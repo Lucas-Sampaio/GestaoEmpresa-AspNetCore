@@ -28,6 +28,8 @@ namespace GestaoEmpresa.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             var connection = Configuration.GetConnectionString("MyConnection");
             services.AddDbContext<GestaoContext>(options => options.UseSqlServer(connection, x => x.MigrationsAssembly(
                 typeof(GestaoContext).Assembly.FullName)));
