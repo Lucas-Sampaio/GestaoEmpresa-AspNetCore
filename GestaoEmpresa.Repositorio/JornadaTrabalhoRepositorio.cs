@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GestaoEmpresa.Dominio;
+using GestaoEmpresa.Repositorio.RepositorioComum;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
