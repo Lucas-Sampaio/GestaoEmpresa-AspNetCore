@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
 using GestaoEmpresa.DominioViewModel.FuncionarioViewModel;
+using GestaoEmpresa.DominioViewModel.JornadaTrabalhoViewModel;
 using GestaoEmpresa.Extensions.ConexaoApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -205,6 +206,65 @@ namespace GestaoEmpresa.Web.Controllers
                 return RedirectToAction(nameof(Delete), new { id });
             }
         }
-  
+        public async Task<ActionResult> CreateJornada(int? IdFuncionario)
+        {
+
+            if (IdFuncionario == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(new JornadaVMVal() { IdFuncionario = IdFuncionario.Value });
+
+
+        }
+
+        // POST: Funcionario/CreateJornada
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateJornada(JornadaVMVal jornadaVMVal)
+        {
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var model = await WebApiRestClient.PostAsync<ResponseApi<bool>>("api/jornada", jornadaVMVal);
+                    if (model.errors.Count > 0)
+                    {
+                        ViewBag.Erro = model.errors.First().msg;
+                        return View(jornadaVMVal);
+                    }
+                    return RedirectToAction(nameof(Edit), new { id = jornadaVMVal.IdFuncionario });
+                }
+                return View(jornadaVMVal);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Erro = ex.Message;
+                return View(jornadaVMVal);
+            }
+        }
+        public async Task<ActionResult> DeleteJornada(int? pId, int? IdFuncionario)
+        {
+            try
+            {
+                if (pId == null)
+                {
+                    throw new Exception("Id nulo");
+                }
+                var model = await WebApiRestClient.DeleteAsync<ResponseApi<bool>>($"api/jornada/{pId}");
+                if (model.errors.Count > 0)
+                {
+                    ViewBag.Erro = model.errors.First().msg;
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Erro = ex.Message;
+            }
+            return RedirectToAction(nameof(Edit), new { id = IdFuncionario });
+
+        }
+
     }
 }

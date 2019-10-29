@@ -45,7 +45,42 @@
         </form>
     </div>
 </div>
-
+<div class="row">
+    <h4>Jornada de Trabalho</h4>
+    <hr />
+    <p>
+        <a asp-action="CreateJornada" asp-route-IdFuncionario="@Model.Id">Cadastrar Jornada</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Dias")
+                </th>
+                <th>
+                    @Html.DisplayName("Horas")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Jornadas)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PeriodoDia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PeriodoHora)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Delete", "DeleteJornada", new { pId = item.Id, IdFuncionario = Model.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
