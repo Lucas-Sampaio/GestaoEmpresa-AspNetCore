@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GestaoEmpresa.DAL
 {
-    class GestaoContext : DbContext
+    public class GestaoContext : DbContext
     {
         public GestaoContext() : base() { }
         public GestaoContext(DbContextOptions<GestaoContext> options = null) : base(options)
