@@ -26,6 +26,13 @@ namespace GestaoEmpresa.Api.Controllers
         }
 
         // POST: api/jornada
+        /// <summary>
+        /// Cria um objeto jornada de trabalho
+        /// </summary>
+        /// <param name="jornadaVMVal">um objeto jornada viewModelVAL</param>
+        /// <returns>retorna true se o objeto foi criado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] JornadaVMVal jornadaVMVal)
         {
@@ -44,6 +51,13 @@ namespace GestaoEmpresa.Api.Controllers
         }
 
         // DELETE: api/jornada/5
+        /// <summary>
+        /// Deleta o objeto jornada de trabalho
+        /// </summary>
+        /// <param name="id">O id do objeto</param>
+        /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

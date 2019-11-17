@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GestaoEmpresa.DAL;
 using GestaoEmpresa.Dominio;
@@ -14,17 +13,26 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoEmpresa.Api.Controllers
 {
+    //[ApiConventionType(typeof(DefaultApiConventions))]
     [Produces("application/json")]
     [Route("api/empresa")]
     [ApiController]
+    
     public class EmpresaController : ControllerBase
     {
         private readonly IRepositorio<Empresa> _db;
+        
         public EmpresaController(GestaoContext pContext)
         {
             _db = new EmpresaRepositorio(pContext);
         }
         // GET: api/Empresa
+        /// <summary>
+        /// Retorna uma ResponseApi com lista de empresas
+        /// </summary>
+        /// <returns>Lista de empresas viewmodels</returns>
+        ///<response code="200">Retorna um Response api com o result contendo uma lista de empresas ou um response com msg de erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<List<EmpresaVM>>))]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -43,8 +51,14 @@ namespace GestaoEmpresa.Api.Controllers
             }
         }
 
+
         // GET: api/Empresa/5
-        // GET: api/Empresa/5
+        /// <summary>
+        /// Retorna uma ResponseApi com uma empresa encontrada pelo id
+        /// </summary>
+        /// <returns>Lista de empresas viewmodels</returns>
+        ///<response code="200">Retorna um Response api com o result contendo uma empresa ou um response com msg de erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<EmpresaVM>))]
         [HttpGet("{id}", Name = "GetEmpresa")]
         public async Task<IActionResult> Get(int id)
         {
@@ -62,6 +76,12 @@ namespace GestaoEmpresa.Api.Controllers
                 return Ok(result.AddError(ex.Message));
             }
         }
+        /// <summary>
+        /// Retorna uma ResponseApi com uma empresa encontrada pelo id
+        /// </summary>
+        /// <returns>Lista de empresas viewmodels</returns>
+        ///<response code="200">Retorna uma empresa para validação para caso de atualização</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<EmpresaVMVal>))]
         [HttpGet("getEmpresaVal/{id}")]
         public async Task<IActionResult> GetEmpresaVal(int id)
         {
@@ -80,6 +100,13 @@ namespace GestaoEmpresa.Api.Controllers
             }
         }
         // POST: api/Empresa
+        /// <summary>
+        /// Cria um objeto empresa
+        /// </summary>
+        /// <param name="empresaVMVal">um objeto empresa viewModelVAL</param>
+        /// <returns>retorna true se o objeto foi criado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] EmpresaVMVal empresaVMVal)
         {
@@ -98,6 +125,14 @@ namespace GestaoEmpresa.Api.Controllers
         }
 
         // PUT: api/Empresa/5
+        /// <summary>
+        /// Atualiza o objeto empresa
+        /// </summary>
+        /// <param name="id">O id do objeto</param>
+        /// <param name="empresaVMVal">um objeto empresa viewModelVAL</param>
+        /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] EmpresaVMVal empresaVMVal)
         {
@@ -123,6 +158,13 @@ namespace GestaoEmpresa.Api.Controllers
             }
         }
         // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Deleta o objeto empresa
+        /// </summary>
+        /// <param name="id">O id do objeto</param>
+        /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

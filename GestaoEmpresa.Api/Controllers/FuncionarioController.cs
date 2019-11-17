@@ -24,8 +24,14 @@ namespace GestaoEmpresa.Api.Controllers
         {
             _db = new FuncionarioRepositorio(pContext);
         }
-        
+
         // GET: api/funcionario
+        /// <summary>
+        /// Retorna uma ResponseApi com lista de funcionarios
+        /// </summary>
+        /// <returns>Lista de funcionarios viewmodels</returns>
+        ///<response code="200">Retorna um Response api com o result contendo uma lista de funcionarios ou um response com msg de erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<List<FuncionarioVM>>))]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -44,6 +50,12 @@ namespace GestaoEmpresa.Api.Controllers
             }
         }
         // GET: api/funcionario/5
+        /// <summary>
+        /// Retorna uma ResponseApi com um funcionario encontrado pelo id
+        /// </summary>
+        /// <returns>Lista de funcionarios viewmodels</returns>
+        ///<response code="200">Retorna um Response api com o result contendo um funcionario ou um response com msg de erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<FuncionarioVM>))]
         [HttpGet("{id}", Name = "GetFuncionario")]
         public async Task<IActionResult> Get(int id)
         {
@@ -61,6 +73,12 @@ namespace GestaoEmpresa.Api.Controllers
                 return Ok(result.AddError(ex.Message));
             }
         }
+        /// <summary>
+        /// Retorna um ResponseApi com um funcionario encontrado pelo id
+        /// </summary>
+        /// <returns>Lista de funcionarios viewmodels</returns>
+        ///<response code="200">Retorna um funcionairio para validação para caso de atualização</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<FuncionarioVMVal>))]
         [HttpGet("getFuncionarioVal/{id}")]
         public async Task<IActionResult> GetEmpresaVal(int id)
         {
@@ -79,6 +97,13 @@ namespace GestaoEmpresa.Api.Controllers
             }
         }
         // POST: api/funcionario
+        /// <summary>
+        /// Cria um objeto funcionario
+        /// </summary>
+        /// <param name="funcionarioVMVal">um objeto funcionario viewModelVAL</param>
+        /// <returns>retorna true se o objeto foi criado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] FuncionarioVMVal funcionarioVMVal)
         {
@@ -97,6 +122,14 @@ namespace GestaoEmpresa.Api.Controllers
         }
 
         // PUT: api/funcionario/5
+        /// <summary>
+        /// Atualiza o objeto funcionario
+        /// </summary>
+        /// <param name="id">O id do objeto</param>
+        /// <param name="funcionarioVMVal">um objeto funcionario viewModelVAL</param>
+        /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] FuncionarioVMVal funcionarioVMVal)
         {
@@ -122,8 +155,14 @@ namespace GestaoEmpresa.Api.Controllers
             }
         }
 
-
         // DELETE: api/funcionario/5
+        /// <summary>
+        /// Deleta o objeto funcionario
+        /// </summary>
+        /// <param name="id">O id do objeto</param>
+        /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
