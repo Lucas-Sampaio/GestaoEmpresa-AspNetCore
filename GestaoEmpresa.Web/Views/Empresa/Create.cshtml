@@ -62,6 +62,10 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        //Adiciona mensagens de alerta
+        await Html.RenderPartialAsync("_Alerta");
+    }
     <script>
         $(document).ready(function () {
 

@@ -14,6 +14,12 @@ namespace GestaoEmpresa.Web.Controllers
 {
     public class FuncionarioController : Controller
     {
+        private async Task<SelectList> GetEmpresas()
+        {
+            var response = await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
+            var modelEmpresas = response.result;
+            return new SelectList(modelEmpresas, "Id", "Nome");
+        }
         // GET: Funcionario
         public async Task<ActionResult> Index()
         {
@@ -69,12 +75,10 @@ namespace GestaoEmpresa.Web.Controllers
         // GET: Funcionario/Create
         public async Task<ActionResult> Create()
         {
-            var response = await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
-            var modelEmpresas = response.result;
-            ViewBag.Empresas = new SelectList(modelEmpresas, "Id", "Nome");
+            ViewBag.Empresas = await GetEmpresas();
             return View();
         }
-
+       
         // POST: Funcionario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -85,9 +89,8 @@ namespace GestaoEmpresa.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var response = await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
-                    var modelEmpresas = response.result;
-                    ViewBag.Empresas = new SelectList(modelEmpresas, "Id", "Nome");
+
+                    ViewBag.Empresas = await GetEmpresas();
 
                     var model = await WebApiRestClient.PostAsync<ResponseApi<bool>>("api/funcionario", funcionarioVMVal);
                     if (model.errors.Count > 0)
@@ -96,14 +99,13 @@ namespace GestaoEmpresa.Web.Controllers
                         return View(funcionarioVMVal);
                     }
                     return RedirectToAction(nameof(Index));
-                }
-                return View(funcionarioVMVal);
+                }        
             }
             catch (Exception ex)
             {
                 ViewBag.Erro = ex.Message;
-                return View(funcionarioVMVal);
             }
+            return View(funcionarioVMVal);
         }
 
         // GET: Funcionario/Edit/5
@@ -115,9 +117,8 @@ namespace GestaoEmpresa.Web.Controllers
                 {
                     return NotFound();
                 }
-                var response = await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
-                var modelEmpresas = response.result;
-                ViewBag.Empresas = new SelectList(modelEmpresas, "Id", "Nome");
+
+                ViewBag.Empresas = GetEmpresas();
                 var model = await WebApiRestClient.GetAsync<ResponseApi<FuncionarioVMVal>>($"api/funcionario/getFuncionarioVal/{id.Value}");
                 if (model == null)
                 {
@@ -145,9 +146,8 @@ namespace GestaoEmpresa.Web.Controllers
                 }
                 if (ModelState.IsValid)
                 {
-                    var response = await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
-                    var modelEmpresas = response.result;
-                    ViewBag.Empresas = new SelectList(modelEmpresas, "Id", "Nome");
+
+                    ViewBag.Empresas = GetEmpresas();
 
                     var model = await WebApiRestClient.PutAsync<ResponseApi<bool>>($"api/funcionario/{id}", funcionarioVMVal);
                     if (model.errors.Count > 0)
@@ -156,14 +156,13 @@ namespace GestaoEmpresa.Web.Controllers
                         return View(funcionarioVMVal);
                     }
                     return RedirectToAction(nameof(Index));
-                }
-                return View(funcionarioVMVal);
+                }              
             }
             catch (Exception ex)
             {
                 ViewBag.Erro = ex.Message;
-                return View(funcionarioVMVal);
             }
+            return View(funcionarioVMVal);
         }
 
         // GET: Funcionario/Delete/5
@@ -214,7 +213,6 @@ namespace GestaoEmpresa.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(new JornadaVMVal() { IdFuncionario = IdFuncionario.Value });
-
 
         }
 

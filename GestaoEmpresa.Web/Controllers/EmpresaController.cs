@@ -87,14 +87,13 @@ namespace GestaoEmpresa.Web.Controllers
                         return View(empresaVMVal);
                     }
                     return RedirectToAction(nameof(Index));
-                }
-                return View(empresaVMVal);
+                }             
             }
             catch (Exception ex)
             {
-                ViewBag.Erro = ex.Message;
-                return View(empresaVMVal);
+                ViewBag.Erro = ex.Message;              
             }
+            return View(empresaVMVal);
         }
 
         // GET: Empresa/Edit/5
@@ -143,13 +142,12 @@ namespace GestaoEmpresa.Web.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
-                return View(empresaVMVal);
             }
             catch (Exception ex)
             {
                 ViewBag.Erro = ex.Message;
-                return View(empresaVMVal);
             }
+            return View(empresaVMVal);
         }
 
         // GET: Empresa/Delete/5
