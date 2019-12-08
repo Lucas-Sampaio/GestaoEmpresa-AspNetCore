@@ -11,7 +11,7 @@ namespace GestaoEmpresa.Extensions.ConexaoApi
 {
     public class WebApiRestClient
     {
-        private static readonly Uri ServerUri = new Uri("http://localhost:54059");
+        private static readonly Uri ServerUri = new Uri("http://localhost:58823");
 
         public static async Task<T> GetAsync<T>(string resourceUri, [Optional]CancellationToken cancellationToken)
         {
