@@ -118,7 +118,7 @@ namespace GestaoEmpresa.Web.Controllers
                     return NotFound();
                 }
 
-                ViewBag.Empresas = GetEmpresas();
+                ViewBag.Empresas = await GetEmpresas();
                 var model = await WebApiRestClient.GetAsync<ResponseApi<FuncionarioVMVal>>($"api/funcionario/getFuncionarioVal/{id.Value}");
                 if (model == null)
                 {
@@ -147,7 +147,7 @@ namespace GestaoEmpresa.Web.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    ViewBag.Empresas = GetEmpresas();
+                    ViewBag.Empresas = await GetEmpresas();
 
                     var model = await WebApiRestClient.PutAsync<ResponseApi<bool>>($"api/funcionario/{id}", funcionarioVMVal);
                     if (model.errors.Count > 0)
