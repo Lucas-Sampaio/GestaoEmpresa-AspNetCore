@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using GestaoEmpresa.Dominio;
-using GestaoEmpresa.Dominio.Enums;
 using GestaoEmpresa.DominioViewModel.JornadaTrabalhoViewModel;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using GestaoEmpresa.Dominio.Enums;
 
 namespace GestaoEmpresa.Extensions.AutoMapper.Profiles
 {

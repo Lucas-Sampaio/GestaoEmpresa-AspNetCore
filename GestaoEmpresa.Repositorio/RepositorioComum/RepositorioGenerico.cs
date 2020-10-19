@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GestaoEmpresa.Repositorio.RepositorioComum
@@ -149,7 +148,8 @@ namespace GestaoEmpresa.Repositorio.RepositorioComum
 
         public virtual Task<List<TEntidade>> SelectAllAsync(Expression<Func<TEntidade, bool>> predicate, params string[] props)
         {
-            var entidades = Task.Run(() => {
+            var entidades = Task.Run(() =>
+            {
                 return SelectAll(predicate, props);
             });
             return entidades;
@@ -169,7 +169,8 @@ namespace GestaoEmpresa.Repositorio.RepositorioComum
 
         public virtual Task<IQueryable<TEntidade>> SelectAllQueryAsync(params string[] props)
         {
-            var entidades = Task.Run(() => {
+            var entidades = Task.Run(() =>
+            {
                 return SelectAllQuery(props);
             });
             return entidades;
@@ -177,7 +178,8 @@ namespace GestaoEmpresa.Repositorio.RepositorioComum
 
         public virtual Task<IQueryable<TEntidade>> SelectAllQueryAsync(Expression<Func<TEntidade, bool>> predicate, params string[] props)
         {
-            var entidades = Task.Run(() => {
+            var entidades = Task.Run(() =>
+            {
                 return SelectAllQuery(predicate, props);
             });
             return entidades;
@@ -191,7 +193,7 @@ namespace GestaoEmpresa.Repositorio.RepositorioComum
         public virtual Task<TEntidade> SelectByIdAsync(int? id)
         {
             if (!id.HasValue) return null;
-            return dbContext.Set<TEntidade>().FindAsync(id.Value);
+            return dbContext.Set<TEntidade>().FindAsync(id.Value).AsTask();
         }
 
         public virtual void Update(TEntidade entidade)
