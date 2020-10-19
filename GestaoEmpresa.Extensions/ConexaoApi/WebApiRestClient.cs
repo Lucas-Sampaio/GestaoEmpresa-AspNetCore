@@ -6,8 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-
 
 namespace GestaoEmpresa.Extensions.ConexaoApi
 {
@@ -28,7 +26,7 @@ namespace GestaoEmpresa.Extensions.ConexaoApi
                     // HTTP GET
                     var response = await client.GetAsync(resourceUri, cancellationToken);
                     if (response.IsSuccessStatusCode)
-                        return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+                        return await response.Content.ReadAsAsync<T>();
                     return default(T);
                 }
             }
@@ -52,12 +50,11 @@ namespace GestaoEmpresa.Extensions.ConexaoApi
                     client.BaseAddress = ServerUri;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var json = JsonConvert.SerializeObject(pObject);
-                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
                     // HTTP POST
-                    var response = await client.PostAsync(resourceUri, stringContent);
+                    var response = await client.PostAsJsonAsync(resourceUri, pObject);
                     if (response.IsSuccessStatusCode)
-                        return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+                        return await response.Content.ReadAsAsync<T>();
                     return default(T);
                 }
             }
@@ -75,12 +72,11 @@ namespace GestaoEmpresa.Extensions.ConexaoApi
                     client.BaseAddress = ServerUri;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var json = JsonConvert.SerializeObject(pObject);
-                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json"); 
+
                     // HTTP PUT
-                    var response = await client.PutAsync(resourceUri, stringContent);
+                    var response = await client.PutAsJsonAsync(resourceUri, pObject);
                     if (response.IsSuccessStatusCode)
-                        return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+                        return await response.Content.ReadAsAsync<T>();
                     return default(T);
                 }
             }
@@ -103,7 +99,7 @@ namespace GestaoEmpresa.Extensions.ConexaoApi
                     // HTTP DELETE
                     var response = await client.DeleteAsync(resourceUri);
                     if (response.IsSuccessStatusCode)
-                        return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+                        return await response.Content.ReadAsAsync<T>();
                     return default(T);
                 }
             }

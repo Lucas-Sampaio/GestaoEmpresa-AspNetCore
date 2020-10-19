@@ -1,15 +1,16 @@
-﻿using GestaoEmpresa.DAL;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GestaoEmpresa.DAL;
 using GestaoEmpresa.Dominio;
 using GestaoEmpresa.DominioViewModel.FuncionarioViewModel;
 using GestaoEmpresa.Extensions.AutoMapper;
 using GestaoEmpresa.Extensions.ConexaoApi;
 using GestaoEmpresa.Repositorio;
+using GestaoEmpresa.Repositorio.RepositorioComum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GestaoEmpresa.Repositorio.RepositorioComum;
 
 namespace GestaoEmpresa.Api.Controllers
 {
