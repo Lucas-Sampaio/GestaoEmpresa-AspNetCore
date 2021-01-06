@@ -22,6 +22,5 @@
     <ProjectReference Include="..\GestaoEmpresa.DAL\GestaoEmpresa.DAL.csproj" />
     <ProjectReference Include="..\GestaoEmpresa.DominioViewModel\GestaoEmpresa.DominioViewModel.csproj" />
     <ProjectReference Include="..\GestaoEmpresa.Extensions\GestaoEmpresa.Extensions.csproj" />
-    <ProjectReference Include="..\GestaoEmpresa.Repositorio\GestaoEmpresa.Repositorio.csproj" />
   </ItemGroup>
 </Project>

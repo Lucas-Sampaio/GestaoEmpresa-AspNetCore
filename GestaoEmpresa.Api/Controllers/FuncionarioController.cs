@@ -1,15 +1,14 @@
-﻿using GestaoEmpresa.DAL;
+﻿using GestaoEmpresa.DAL.Repositorio.RepositorioComum;
 using GestaoEmpresa.Dominio;
 using GestaoEmpresa.DominioViewModel.FuncionarioViewModel;
+using GestaoEmpresa.DominioViewModel.JornadaTrabalhoViewModel;
 using GestaoEmpresa.Extensions.AutoMapper;
 using GestaoEmpresa.Extensions.ConexaoApi;
-using GestaoEmpresa.Repositorio;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GestaoEmpresa.Repositorio.RepositorioComum;
 
 namespace GestaoEmpresa.Api.Controllers
 {
@@ -18,10 +17,10 @@ namespace GestaoEmpresa.Api.Controllers
     [ApiController]
     public class FuncionarioController : ControllerBase
     {
-        private readonly IRepositorio<Funcionario> _db;
-        public FuncionarioController(GestaoContext pContext)
+        private readonly IFuncionarioRepository _funcionarioRepository;
+        public FuncionarioController(IFuncionarioRepository funcionarioRepository)
         {
-            _db = new FuncionarioRepositorio(pContext);
+            _funcionarioRepository = funcionarioRepository;
         }
 
         // GET: api/funcionario
@@ -37,7 +36,7 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<List<FuncionarioVM>>.Instance;
             try
             {
-                var funcionarios = await _db.SelectAllAsync("Endereco", "Jornadas");
+                var funcionarios = await _funcionarioRepository.ObterTodos("Endereco", "Jornadas");
                 var funcionarioVM = AutoMapperManager.Instance.Map<List<FuncionarioVM>>(funcionarios);
                 result.SetResult(funcionarioVM);
 
@@ -61,7 +60,7 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<FuncionarioVM>.Instance;
             try
             {
-                var funcionario = await _db.SelectByIdAsync(id);
+                var funcionario = await _funcionarioRepository.ObterPorId(id);
                 var funcionarioVM = AutoMapperManager.Instance.Map<FuncionarioVM>(funcionario);
                 result.SetResult(funcionarioVM);
 
@@ -84,7 +83,7 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<FuncionarioVMVal>.Instance;
             try
             {
-                var funcionario = await _db.SelectByIdAsync(id);
+                var funcionario = await _funcionarioRepository.ObterPorId(id);
                 var funcionarioVMVal = AutoMapperManager.Instance.Map<FuncionarioVMVal>(funcionario);
                 result.SetResult(funcionarioVMVal);
 
@@ -110,7 +109,8 @@ namespace GestaoEmpresa.Api.Controllers
             try
             {
                 var funcionario = AutoMapperManager.Instance.Map<Funcionario>(funcionarioVMVal);
-                await _db.InsertAsync(funcionario);
+                _funcionarioRepository.Adicionar(funcionario);
+                await _funcionarioRepository.UnitOfWork.Commit();
                 result.SetResult(true);
                 return Ok(result);
             }
@@ -142,8 +142,8 @@ namespace GestaoEmpresa.Api.Controllers
                     return Ok(result);
                 }
                 var funcionario = AutoMapperManager.Instance.Map<Funcionario>(funcionarioVMVal);
-                await _db.UpdateAsync(funcionario);
-
+                _funcionarioRepository.Atualizar(funcionario);
+                await _funcionarioRepository.UnitOfWork.Commit();
                 result.SetResult(true);
 
                 return Ok(result);
@@ -168,14 +168,66 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<bool>.Instance;
             try
             {
-                var funcionario = _db.SelectById(id);
+                var funcionario = await _funcionarioRepository.ObterPorId(id);
                 if (funcionario == null)
                 {
                     result.SetResult(false);
                     result.AddInfo("funcionario não encontrada", 404);
                     return Ok(result);
                 }
-                await _db.DeleteAsync(funcionario);
+                _funcionarioRepository.Remover(id);
+                await _funcionarioRepository.UnitOfWork.Commit();
+                result.SetResult(true);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(result.AddError(ex.Message).SetResult(false));
+            }
+        }
+
+        // POST: api/jornada
+        /// <summary>
+        /// Cria um objeto jornada de trabalho
+        /// </summary>
+        /// <param name="jornadaVMVal">um objeto jornada viewModelVAL</param>
+        /// <returns>retorna true se o objeto foi criado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
+        [HttpPost("adicionarJornada")]
+        public async Task<IActionResult> AdicionarJornada([FromBody] JornadaVMVal jornadaVMVal)
+        {
+            var result = ResponseApi<bool>.Instance;
+            try
+            {
+                var jornada = AutoMapperManager.Instance.Map<JornadaTrabalho>(jornadaVMVal);
+                _funcionarioRepository.AdicionarJornada(jornada);
+                await _funcionarioRepository.UnitOfWork.Commit();
+                result.SetResult(true);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(result.AddError(ex.Message).SetResult(false));
+            }
+        }
+
+        // DELETE: api/jornada/5
+        /// <summary>
+        /// Deleta o objeto jornada de trabalho
+        /// </summary>
+        /// <param name="id">O id do objeto</param>
+        /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
+        [HttpDelete("removerJornada/{id}")]
+        public async Task<IActionResult> RemoverJornada(int id)
+        {
+            var result = ResponseApi<bool>.Instance;
+            try
+            {
+                _funcionarioRepository.RemoverJornada(id);
+                await _funcionarioRepository.UnitOfWork.Commit();
                 result.SetResult(true);
                 return Ok(result);
             }

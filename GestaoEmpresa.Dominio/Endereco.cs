@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GestaoEmpresa.Dominio
+﻿namespace GestaoEmpresa.Dominio
 {
-    public class Endereco
+    public class Endereco : EntityBase
     {
-        public int Id { get; set; }
         public string Cep { get; set; }
         public string Logradouro { get; set; }
         public string Bairro { get; set; }

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
+using GestaoEmpresa.Extensions.ConexaoApi;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
-using GestaoEmpresa.Extensions.ConexaoApi;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoEmpresa.Web.Controllers
 {
@@ -87,11 +86,11 @@ namespace GestaoEmpresa.Web.Controllers
                         return View(empresaVMVal);
                     }
                     return RedirectToAction(nameof(Index));
-                }             
+                }
             }
             catch (Exception ex)
             {
-                ViewBag.Erro = ex.Message;              
+                ViewBag.Erro = ex.Message;
             }
             return View(empresaVMVal);
         }

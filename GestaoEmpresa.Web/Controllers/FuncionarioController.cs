@@ -226,7 +226,7 @@ namespace GestaoEmpresa.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var model = await WebApiRestClient.PostAsync<ResponseApi<bool>>("api/jornada", jornadaVMVal);
+                    var model = await WebApiRestClient.PostAsync<ResponseApi<bool>>("api/funcionario/adicionarJornada", jornadaVMVal);
                     if (model.errors.Count > 0)
                     {
                         ViewBag.Erro = model.errors.First().msg;
@@ -250,7 +250,7 @@ namespace GestaoEmpresa.Web.Controllers
                 {
                     throw new Exception("Id nulo");
                 }
-                var model = await WebApiRestClient.DeleteAsync<ResponseApi<bool>>($"api/jornada/{pId}");
+                var model = await WebApiRestClient.DeleteAsync<ResponseApi<bool>>($"api/funcionario/RemoverJornada/{pId}");
                 if (model.errors.Count > 0)
                 {
                     ViewBag.Erro = model.errors.First().msg;

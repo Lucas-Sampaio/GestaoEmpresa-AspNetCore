@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GestaoEmpresa.DAL;
+﻿using GestaoEmpresa.DAL.Repositorio.RepositorioComum;
 using GestaoEmpresa.Dominio;
 using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
 using GestaoEmpresa.Extensions.AutoMapper;
 using GestaoEmpresa.Extensions.ConexaoApi;
-using GestaoEmpresa.Repositorio;
-using GestaoEmpresa.Repositorio.RepositorioComum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GestaoEmpresa.Api.Controllers
 {
@@ -17,14 +15,14 @@ namespace GestaoEmpresa.Api.Controllers
     [Produces("application/json")]
     [Route("api/empresa")]
     [ApiController]
-    
+
     public class EmpresaController : ControllerBase
     {
-        private readonly IRepositorio<Empresa> _db;
-        
-        public EmpresaController(GestaoContext pContext)
+        private readonly IEmpresaRepository _empresaRepository;
+
+        public EmpresaController(IEmpresaRepository produtoRepository)
         {
-            _db = new EmpresaRepositorio(pContext);
+            _empresaRepository = produtoRepository;
         }
         // GET: api/Empresa
         /// <summary>
@@ -39,7 +37,7 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<List<EmpresaVM>>.Instance;
             try
             {
-                var empresas = await _db.SelectAllAsync("Endereco", "Funcionarios");
+                var empresas = await _empresaRepository.ObterTodos("Endereco", "Funcionarios");
                 var empresasVM = AutoMapperManager.Instance.Map<List<EmpresaVM>>(empresas);
                 result.SetResult(empresasVM);
 
@@ -65,7 +63,7 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<EmpresaVM>.Instance;
             try
             {
-                var empresa = await _db.SelectByIdAsync(id);
+                var empresa = await _empresaRepository.ObterPorId(id);
                 var empresaVM = AutoMapperManager.Instance.Map<EmpresaVM>(empresa);
                 result.SetResult(empresaVM);
 
@@ -88,7 +86,7 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<EmpresaVMVal>.Instance;
             try
             {
-                var empresa = await _db.SelectByIdAsync(id);
+                var empresa = await _empresaRepository.ObterPorId(id);
                 var empresaVMVal = AutoMapperManager.Instance.Map<EmpresaVMVal>(empresa);
                 result.SetResult(empresaVMVal);
 
@@ -114,7 +112,8 @@ namespace GestaoEmpresa.Api.Controllers
             try
             {
                 var empresa = AutoMapperManager.Instance.Map<Empresa>(empresaVMVal);
-                await _db.InsertAsync(empresa);
+                _empresaRepository.Adicionar(empresa);
+                await _empresaRepository.UnitOfWork.Commit();
                 result.SetResult(true);
                 return Ok(result);
             }
@@ -146,8 +145,8 @@ namespace GestaoEmpresa.Api.Controllers
                     return Ok(result);
                 }
                 var empresa = AutoMapperManager.Instance.Map<Empresa>(empresaVMVal);
-                await _db.UpdateAsync(empresa);
-
+                _empresaRepository.Atualizar(empresa);
+                await _empresaRepository.UnitOfWork.Commit();
                 result.SetResult(true);
 
                 return Ok(result);
@@ -171,14 +170,15 @@ namespace GestaoEmpresa.Api.Controllers
             var result = ResponseApi<bool>.Instance;
             try
             {
-                var empresa = _db.SelectById(id);
+                var empresa = await _empresaRepository.ObterPorId(id);
                 if (empresa == null)
                 {
                     result.SetResult(false);
                     result.AddInfo("empresa não encontrada", 404);
                     return Ok(result);
                 }
-                await _db.DeleteAsync(empresa);
+                _empresaRepository.Remover(id);
+                await _empresaRepository.UnitOfWork.Commit();
                 result.SetResult(true);
                 return Ok(result);
             }
