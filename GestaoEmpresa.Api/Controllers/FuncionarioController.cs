@@ -1,5 +1,5 @@
-﻿using GestaoEmpresa.DAL.Repositorio.RepositorioComum;
-using GestaoEmpresa.Dominio;
+﻿using GestaoEmpresa.Dominio;
+using GestaoEmpresa.Dominio.Repositorio;
 using GestaoEmpresa.DominioViewModel.FuncionarioViewModel;
 using GestaoEmpresa.DominioViewModel.JornadaTrabalhoViewModel;
 using GestaoEmpresa.Extensions.AutoMapper;

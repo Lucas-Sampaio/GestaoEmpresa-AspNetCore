@@ -14,6 +14,7 @@ namespace GestaoEmpresa.Extensions.AutoMapper.Profiles
             CreateMap<Empresa, EmpresaVM>().ForMember(dest => dest.Cep, opt => { opt.MapFrom(src => src.Endereco.Cep); });
             CreateMap<Empresa, EmpresaVMVal>();
             CreateMap<EmpresaVMVal, Empresa>();
+            CreateMap<EmpresaVM, Empresa>();
         }
     }
 }

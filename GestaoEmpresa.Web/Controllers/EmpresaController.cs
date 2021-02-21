@@ -1,5 +1,6 @@
 ﻿using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
 using GestaoEmpresa.Extensions.ConexaoApi;
+using GestaoEmpresa.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,18 @@ namespace GestaoEmpresa.Web.Controllers
 {
     public class EmpresaController : Controller
     {
+        private readonly IEmpresaService _empresaService;
+
+        public EmpresaController(IEmpresaService empresaService)
+        {
+            _empresaService = empresaService;
+        }
         // GET: Empresa
         public async Task<ActionResult> Index()
         {
             try
             {
-                var model = await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
+                var model = await _empresaService.ObterTodos(); //await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
                 if (model.errors.Count > 0)
                 {
                     ViewBag.Message = model.errors.FirstOrDefault().msg;
@@ -40,7 +47,7 @@ namespace GestaoEmpresa.Web.Controllers
                     return NotFound();
                 }
 
-                var model = await WebApiRestClient.GetAsync<ResponseApi<EmpresaVM>>($"api/empresa/{id}");
+                var model = await _empresaService.ObterPorId(id.Value);
 
                 if (model.result == null)
                 {
@@ -78,7 +85,7 @@ namespace GestaoEmpresa.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var model = await WebApiRestClient.PostAsync<ResponseApi<bool>>("api/empresa", empresaVMVal);
+                    var model = await _empresaService.CadastrarEmpresa(empresaVMVal);
                     if (model.errors.Count > 0)
                     {
 
@@ -105,7 +112,7 @@ namespace GestaoEmpresa.Web.Controllers
                     return NotFound();
                 }
 
-                var model = await WebApiRestClient.GetAsync<ResponseApi<EmpresaVMVal>>($"api/empresa/getEmpresaVal/{id.Value}");
+                var model = await _empresaService.ObterPorId(id.Value);
                 if (model == null)
                 {
                     return NotFound();
@@ -123,7 +130,7 @@ namespace GestaoEmpresa.Web.Controllers
         // POST: Empresa/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, EmpresaVMVal empresaVMVal)
+        public async Task<ActionResult> Edit(int id, EmpresaVM empresaVMVal)
         {
             try
             {
@@ -131,16 +138,17 @@ namespace GestaoEmpresa.Web.Controllers
                 {
                     return NotFound();
                 }
-                if (ModelState.IsValid)
+
+                //if (ModelState.IsValid)
+                //{
+                var model = await _empresaService.AtualizarEmpresa(id, empresaVMVal);
+                if (model.errors.Count > 0)
                 {
-                    var model = await WebApiRestClient.PutAsync<ResponseApi<bool>>($"api/empresa/{id}", empresaVMVal);
-                    if (model.errors.Count > 0)
-                    {
-                        ViewBag.Erro = model.errors.First().msg;
-                        return View(empresaVMVal);
-                    }
-                    return RedirectToAction(nameof(Index));
+                    ViewBag.Erro = model.errors.First().msg;
+                    return View(empresaVMVal);
                 }
+                return RedirectToAction(nameof(Index));
+                //}
             }
             catch (Exception ex)
             {
@@ -157,7 +165,7 @@ namespace GestaoEmpresa.Web.Controllers
                 return NotFound();
             }
 
-            var model = await WebApiRestClient.GetAsync<ResponseApi<EmpresaVM>>($"api/empresa/{id}");
+            var model = await _empresaService.ObterPorId(id.Value);
 
             if (model.result == null)
             {
@@ -174,7 +182,7 @@ namespace GestaoEmpresa.Web.Controllers
         {
             try
             {
-                var model = await WebApiRestClient.DeleteAsync<ResponseApi<bool>>($"api/empresa/{id}");
+                var model = await _empresaService.RemoverEmpresa(id);
                 if (model.errors.Count > 0)
                 {
                     ViewBag.Erro = model.errors.First().msg;

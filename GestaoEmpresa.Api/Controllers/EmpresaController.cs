@@ -1,5 +1,5 @@
-﻿using GestaoEmpresa.DAL.Repositorio.RepositorioComum;
-using GestaoEmpresa.Dominio;
+﻿using GestaoEmpresa.Dominio;
+using GestaoEmpresa.Dominio.Repositorio;
 using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
 using GestaoEmpresa.Extensions.AutoMapper;
 using GestaoEmpresa.Extensions.ConexaoApi;
@@ -133,7 +133,7 @@ namespace GestaoEmpresa.Api.Controllers
         /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] EmpresaVMVal empresaVMVal)
+        public async Task<IActionResult> Put(int id, EmpresaVM empresaVMVal)
         {
             var result = ResponseApi<bool>.Instance;
             try

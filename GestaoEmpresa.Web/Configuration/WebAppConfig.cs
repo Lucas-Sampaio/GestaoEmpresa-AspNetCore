@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using GestaoEmpresa.Web.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +12,9 @@ namespace GestaoEmpresa.Web.Configuration
     {
         public static IServiceCollection AddMvcConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddRazorPages();
             services.AddControllersWithViews();
-            //services.Configure<AppSettings>(configuration);
+            services.Configure<AppSettings>(configuration);
             return services;
         }
 
