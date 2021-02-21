@@ -1,6 +1,6 @@
 ﻿using GestaoEmpresa.DAL.Extensions;
-using GestaoEmpresa.DAL.Repositorio.RepositorioComum;
 using GestaoEmpresa.Dominio;
+using GestaoEmpresa.Dominio.Repositorio;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;

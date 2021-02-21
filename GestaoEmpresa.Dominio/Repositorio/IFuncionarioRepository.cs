@@ -1,10 +1,9 @@
-﻿using GestaoEmpresa.Dominio;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GestaoEmpresa.DAL.Repositorio.RepositorioComum
+namespace GestaoEmpresa.Dominio.Repositorio
 {
-    public interface IFuncionarioRepository : IRepositorio<Funcionario>
+    public interface IFuncionarioRepository : IRepository<Funcionario>
     {
         Task<IEnumerable<Funcionario>> ObterTodos(params string[] props);
         Task<Empresa> ObterPorId(int id, params string[] props);

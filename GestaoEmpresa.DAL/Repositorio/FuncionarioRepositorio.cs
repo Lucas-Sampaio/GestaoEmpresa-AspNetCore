@@ -1,6 +1,6 @@
 ﻿using GestaoEmpresa.DAL.Extensions;
-using GestaoEmpresa.DAL.Repositorio.RepositorioComum;
 using GestaoEmpresa.Dominio;
+using GestaoEmpresa.Dominio.Repositorio;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace GestaoEmpresa.DAL.Repositorio
     {
         private readonly GestaoContext _context;
         public IUnitOfWork UnitOfWork => _context;
-        public FuncionarioRepositorio(GestaoContext context) 
+        public FuncionarioRepositorio(GestaoContext context)
         {
             _context = context;
         }
