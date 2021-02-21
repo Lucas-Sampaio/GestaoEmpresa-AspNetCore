@@ -6,7 +6,7 @@ namespace GestaoEmpresa.Dominio.Repositorio
     public interface IFuncionarioRepository : IRepository<Funcionario>
     {
         Task<IEnumerable<Funcionario>> ObterTodos(params string[] props);
-        Task<Empresa> ObterPorId(int id, params string[] props);
+        Task<Funcionario> ObterPorId(int id, params string[] props);
         void Adicionar(Funcionario entidade);
         void Atualizar(Funcionario entidade);
         void Remover(int id);

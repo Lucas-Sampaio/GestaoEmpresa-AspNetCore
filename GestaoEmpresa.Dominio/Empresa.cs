@@ -2,12 +2,23 @@
 
 namespace GestaoEmpresa.Dominio
 {
-    public class Empresa : EntityBase,IAggregateRoot
+    public class Empresa : EntityBase, IAggregateRoot
     {
-        public string Nome { get; set; }
-        public string Cnpj { get; set; }
-        public int? IdEndereco { get; set; }
-        public Endereco Endereco { get; set; }
+        public Empresa(string nome, string cnpj)
+        {
+            Nome = nome;
+            Cnpj = new Cnpj(cnpj);
+        }
+
+        protected Empresa() { }
+        public string Nome { get; private set; }
+        public Cnpj Cnpj { get; private set; }
+        public Endereco Endereco { get; private set; }
         public List<Funcionario> Funcionarios { get; set; }
+
+        public void AtribuirEndereco(Endereco endereco)
+        {
+            Endereco = endereco;
+        }
     }
 }

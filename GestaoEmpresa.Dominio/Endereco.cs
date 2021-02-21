@@ -1,6 +1,7 @@
 ﻿namespace GestaoEmpresa.Dominio
 {
-    public class Endereco : EntityBase
+    //value object
+    public class Endereco
     {
         public string Cep { get; set; }
         public string Logradouro { get; set; }
