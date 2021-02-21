@@ -17,7 +17,6 @@ namespace GestaoEmpresa.DAL
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<JornadaTrabalho> Jornadas { get; set; }
-        public DbSet<Endereco> Enderecos { get; set; }
 
         public async Task<bool> Commit()
         {
@@ -27,7 +26,7 @@ namespace GestaoEmpresa.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //configura as propriedades string q não forem configuradas  pra o padrao varchar(100)
+            //configura as propriedades string que não foram configuradas para o padrao varchar(100)
             var propriedades = modelBuilder.Model.GetEntityTypes().SelectMany(x => x.GetProperties().Where(y => y.ClrType == typeof(string)));
             foreach (var property in propriedades)
             {

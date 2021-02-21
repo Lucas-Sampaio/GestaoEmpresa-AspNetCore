@@ -37,9 +37,9 @@ namespace GestaoEmpresa.DAL.Repositorio
             _context.Dispose();
         }
 
-        public async Task<Empresa> ObterPorId(int id, params string[] props)
+        public async Task<Funcionario> ObterPorId(int id, params string[] props)
         {
-            return await _context.Empresas.DynamicInclude(props).SingleOrDefaultAsync(x => x.Id == id);
+            return await _context.Funcionarios.DynamicInclude(props).SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Funcionario>> ObterTodos(params string[] props)

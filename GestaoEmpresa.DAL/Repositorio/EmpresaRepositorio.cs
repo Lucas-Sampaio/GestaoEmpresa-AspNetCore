@@ -43,7 +43,6 @@ namespace GestaoEmpresa.DAL.Repositorio
         {
             _context.Dispose();
         }
-
         public void AdicionarEndereco(Endereco endereco)
         {
             throw new System.NotImplementedException();
