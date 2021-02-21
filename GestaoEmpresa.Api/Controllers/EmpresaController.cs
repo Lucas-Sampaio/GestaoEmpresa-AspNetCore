@@ -30,7 +30,7 @@ namespace GestaoEmpresa.Api.Controllers
         /// <returns>Lista de empresas</returns>
         ///<response code="200">Retorna uma lista de empresas</response>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Empresa>))]
-        [HttpGet]
+        [HttpGet("")]
         public async Task<IActionResult> Get()
         {
             var empresas = await _empresaRepository.ObterTodos();
