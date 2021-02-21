@@ -20,5 +20,13 @@ namespace GestaoEmpresa.Dominio
         {
             Endereco = endereco;
         }
+        public void AtualizarNome(string nome)
+        {
+            Nome = nome;
+        }
+        public void AtualizarCnpj(string cnpj)
+        {
+            Cnpj = new Cnpj(cnpj);
+        }
     }
 }
