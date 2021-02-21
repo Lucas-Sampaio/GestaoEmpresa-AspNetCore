@@ -1,6 +1,5 @@
-﻿using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
-using GestaoEmpresa.Extensions.ConexaoApi;
-using GestaoEmpresa.Web.Extensions;
+﻿using GestaoEmpresa.Web.Extensions;
+using GestaoEmpresa.Web.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -17,41 +16,41 @@ namespace GestaoEmpresa.Web.Services
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(settings.Value.ApiGestaoUrl);
         }
-        public async Task<ResponseApi<bool>> AtualizarEmpresa(int id, EmpresaVM empresaVMVal)
+        public async Task<ResponseResult> AtualizarEmpresa(int id, EmpresaVM empresaVM)
         {
-            var content = ObterConteudo(empresaVMVal);
+            var content = ObterConteudo(empresaVM);
             var response = await _httpClient.PutAsync($"api/empresa/{id}", content);
-            TratarErrosResponse(response);
-            return await DeserializarObjetoResponse<ResponseApi<bool>>(response);
+            if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+            return new ResponseResult();
         }
 
-        public async Task<ResponseApi<bool>> CadastrarEmpresa(EmpresaVMVal empresaVMVal)
+        public async Task<ResponseResult> CadastrarEmpresa(EmpresaVM empresaVM)
         {
-            var content = ObterConteudo(empresaVMVal);
+            var content = ObterConteudo(empresaVM);
             var response = await _httpClient.PostAsync("api/empresa/", content);
-            TratarErrosResponse(response);
-            return await DeserializarObjetoResponse<ResponseApi<bool>>(response);
+            if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+            return new ResponseResult();
         }
 
-        public async Task<ResponseApi<EmpresaVM>> ObterPorId(int id)
+        public async Task<EmpresaVM> ObterPorId(int id)
         {
             var response = await _httpClient.GetAsync($"api/empresa/{id}");
             TratarErrosResponse(response);
-            return await DeserializarObjetoResponse<ResponseApi<EmpresaVM>>(response);
+            return await DeserializarObjetoResponse<EmpresaVM>(response);
         }
 
-        public async Task<ResponseApi<IEnumerable<EmpresaVM>>> ObterTodos()
+        public async Task<IEnumerable<EmpresaVM>> ObterTodos()
         {
             var response = await _httpClient.GetAsync("api/empresa");
             TratarErrosResponse(response);
-            return await DeserializarObjetoResponse<ResponseApi<IEnumerable<EmpresaVM>>>(response);
+            return await DeserializarObjetoResponse<IEnumerable<EmpresaVM>>(response);
         }
 
-        public async Task<ResponseApi<bool>> RemoverEmpresa(int id)
+        public async Task<ResponseResult> RemoverEmpresa(int id)
         {
             var response = await _httpClient.DeleteAsync($"api/empresa/{id}");
-            TratarErrosResponse(response);
-            return await DeserializarObjetoResponse<ResponseApi<bool>>(response);
+            if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+            return new ResponseResult();
         }
     }
 }

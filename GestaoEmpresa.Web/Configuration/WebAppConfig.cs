@@ -44,7 +44,7 @@ namespace GestaoEmpresa.Web.Configuration
             });
             app.UseRouting();
             app.UseIdentityConfiguration();
-            /*    app.UseMiddleware<ExceptionMiddleware>();*/ //faz com q todas requisiçoes passe por ele 
+            app.UseMiddleware<ExceptionMiddleware>(); //faz com q todas requisiçoes passe por ele 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

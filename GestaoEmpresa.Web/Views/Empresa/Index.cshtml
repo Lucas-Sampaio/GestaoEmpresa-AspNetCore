@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GestaoEmpresa.DominioViewModel.EmpresaViewModel.EmpresaVM>
+﻿@model IEnumerable<EmpresaVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Cadastrar</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -17,9 +18,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Cnpj)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cep)
             </th>
             <th></th>
         </tr>
@@ -33,9 +31,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Cnpj)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cep)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |

@@ -1,4 +1,4 @@
-﻿@model GestaoEmpresa.DominioViewModel.EmpresaViewModel.EmpresaVMVal
+﻿@model EmpresaVMVal
 
 @{
     ViewData["Title"] = "Create";
@@ -8,6 +8,9 @@
 
 <h4>Empresa</h4>
 <hr />
+
+<vc:Summary></vc:Summary>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -22,7 +25,7 @@
                 <input asp-for="Cnpj" class="form-control" />
                 <span asp-validation-for="Cnpj" class="text-danger"></span>
             </div>
-            <h4>Endereco</h4>
+            @*<h4>Endereco</h4>
             <hr />
             <div class="form-group">
                 <label asp-for="Endereco.Cep" class="control-label"></label>
@@ -48,7 +51,7 @@
                 <label asp-for="Endereco.Estado" class="control-label"></label>
                 <input asp-for="Endereco.Estado" readonly id="uf" class="form-control" />
                 <span asp-validation-for="Endereco.Estado" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Salvar" class="btn btn-default" />
             </div>
@@ -62,11 +65,8 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    @{
-        //Adiciona mensagens de alerta
-        await Html.RenderPartialAsync("_Alerta");
-    }
-    <script>
+
+    @*<script>
         $(document).ready(function () {
 
             function limpa_formulário_cep() {
@@ -130,5 +130,5 @@
                 }
             });
         });
-    </script>
+    </script>*@
 }

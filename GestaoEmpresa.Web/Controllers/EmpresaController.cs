@@ -1,15 +1,11 @@
-﻿using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
-using GestaoEmpresa.Extensions.ConexaoApi;
+﻿using GestaoEmpresa.Web.Models;
 using GestaoEmpresa.Web.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GestaoEmpresa.Web.Controllers
 {
-    public class EmpresaController : Controller
+    public class EmpresaController : MainController
     {
         private readonly IEmpresaService _empresaService;
 
@@ -18,60 +14,14 @@ namespace GestaoEmpresa.Web.Controllers
             _empresaService = empresaService;
         }
         // GET: Empresa
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            try
-            {
-                var model = await _empresaService.ObterTodos(); //await WebApiRestClient.GetAsync<ResponseApi<List<EmpresaVM>>>("api/empresa");
-                if (model.errors.Count > 0)
-                {
-                    ViewBag.Message = model.errors.FirstOrDefault().msg;
-                    return View(new List<EmpresaVM>());
-                }
-                return View(model.result);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = ex.Message;
-                return View(new List<EmpresaVM>());
-            }
-        }
-
-        // GET: Empresa/Details/5
-        public async Task<ActionResult> Details(int? id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var model = await _empresaService.ObterPorId(id.Value);
-
-                if (model.result == null)
-                {
-                    return NotFound();
-                }
-
-                if (model.errors.Count > 0)
-                {
-                    ViewBag.Message = model.errors.FirstOrDefault().msg;
-                    return View(model);
-                }
-
-                return View(model.result);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
-
+            var model = await _empresaService.ObterTodos();
+            return View(model);
         }
 
         // GET: Empresa/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -79,86 +29,18 @@ namespace GestaoEmpresa.Web.Controllers
         // POST: Empresa/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(EmpresaVMVal empresaVMVal)
+        public async Task<IActionResult> Create(EmpresaVM empresaVM)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var model = await _empresaService.CadastrarEmpresa(empresaVMVal);
-                    if (model.errors.Count > 0)
-                    {
+            if (!ModelState.IsValid) return View(empresaVM);
 
-                        ViewBag.Erro = model.errors.First().msg;
-                        return View(empresaVMVal);
-                    }
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Erro = ex.Message;
-            }
-            return View(empresaVMVal);
+            var resposta = await _empresaService.CadastrarEmpresa(empresaVM);
+
+            if (ResponsePossuiErros(resposta)) return View(empresaVM);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Empresa/Edit/5
-        public async Task<ActionResult> Edit(int? id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var model = await _empresaService.ObterPorId(id.Value);
-                if (model == null)
-                {
-                    return NotFound();
-                }
-                return View(model.result);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Erro = ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
-
-        }
-
-        // POST: Empresa/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, EmpresaVM empresaVMVal)
-        {
-            try
-            {
-                if (id != empresaVMVal.Id)
-                {
-                    return NotFound();
-                }
-
-                //if (ModelState.IsValid)
-                //{
-                var model = await _empresaService.AtualizarEmpresa(id, empresaVMVal);
-                if (model.errors.Count > 0)
-                {
-                    ViewBag.Erro = model.errors.First().msg;
-                    return View(empresaVMVal);
-                }
-                return RedirectToAction(nameof(Index));
-                //}
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Erro = ex.Message;
-            }
-            return View(empresaVMVal);
-        }
-
-        // GET: Empresa/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -166,36 +48,49 @@ namespace GestaoEmpresa.Web.Controllers
             }
 
             var model = await _empresaService.ObterPorId(id.Value);
-
-            if (model.result == null)
+            if (model == null)
             {
                 return NotFound();
             }
+            return View(model);
 
-            return View(model.result);
+        }
+
+        // POST: Empresa/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EmpresaVM empresaVM)
+        {
+            if (id != empresaVM.Id)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid) return View(empresaVM);
+
+            var resposta = await _empresaService.AtualizarEmpresa(id, empresaVM);
+
+            if (ResponsePossuiErros(resposta)) return View(empresaVM);
+
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Empresa/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var model = await _empresaService.RemoverEmpresa(id);
-                if (model.errors.Count > 0)
-                {
-                    ViewBag.Erro = model.errors.First().msg;
-                    return RedirectToAction(nameof(Delete), new { id });
-                }
-                return RedirectToAction(nameof(Index));
+            //em breve adicionar delete assincrono com sweetalert
 
-            }
-            catch (Exception ex)
+            var resposta = await _empresaService.RemoverEmpresa(id);
+
+            if (ResponsePossuiErros(resposta))
             {
-                ViewBag.Erro = ex.Message;
-                return RedirectToAction(nameof(Delete), new { id = id });
+                var erros = resposta.Errors.Mensagens;
+                var msg = string.Join("<br/>", erros);
+                return Json(new { success = false, msg });
             }
+
+            return Json(new { success = true });
+
         }
     }
 }
