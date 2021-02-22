@@ -79,7 +79,7 @@ namespace GestaoEmpresa.Api.Controllers
         /// <param name="empresaDto">um objeto empresa com seu id</param>
         /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
         /// <response code="200">retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</response>
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, EmpresaDTO empresaDto)
         {

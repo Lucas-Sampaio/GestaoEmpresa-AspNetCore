@@ -3,6 +3,9 @@
 
 <h4>Jornada de Trabalho</h4>
 <hr />
+
+<vc:Summary></vc:Summary>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="CreateJornada">
@@ -44,10 +47,3 @@
 <div>
     <a asp-action="Index">Voltar</a>
 </div>
-@section Scripts {
-    @{
-        //Adiciona mensagens de alerta
-        await Html.RenderPartialAsync("_Alerta");
-    }
-}
-

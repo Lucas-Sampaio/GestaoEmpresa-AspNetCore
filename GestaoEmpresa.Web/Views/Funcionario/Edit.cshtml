@@ -1,14 +1,16 @@
-﻿@model GestaoEmpresa.DominioViewModel.FuncionarioViewModel.FuncionarioVMVal
+﻿@model FuncionarioVM
 
 <h4>Funcionario</h4>
 <hr />
+
+<vc:Summary></vc:Summary>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="IdEndereco" />
-
+          
             <div class="form-group">
                 <label asp-for="IdEmpresa" class="control-label"></label>
                 <select asp-for="IdEmpresa" asp-items="@ViewBag.Empresas" class="form-control"></select>
@@ -45,7 +47,7 @@
         </form>
     </div>
 </div>
-<div class="row">
+@*<div class="row">
     <h4>Jornada de Trabalho</h4>
     <hr />
     <p>
@@ -80,16 +82,9 @@
             }
         </tbody>
     </table>
-</div>
+</div>*@
 <div>
     <a asp-action="Index">Voltar</a>
 </div>
-
-@section Scripts {
-    @{
-        //Adiciona mensagens de alerta
-        await Html.RenderPartialAsync("_Alerta");
-    }
-}
 
 

@@ -1,4 +1,5 @@
-﻿using GestaoEmpresa.Web.Services;
+﻿using GestaoEmpresa.Web.Extensions.Atributos;
+using GestaoEmpresa.Web.Services;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,10 +13,13 @@ namespace GestaoEmpresa.Web.Configuration
         {
             #region Atributos
             services.AddSingleton<IValidationAttributeAdapterProvider, CnpjValidationAttributeAdapterProvider>();
+            services.AddSingleton<IValidationAttributeAdapterProvider, CpfValidationAttributeAdapterProvider>();
+            services.AddSingleton<IValidationAttributeAdapterProvider, PisValidationAttributeAdapterProvider>();
             #endregion
 
             #region HttpServices
             services.AddHttpClient<IEmpresaService, EmpresaService>();
+            services.AddHttpClient<IFuncionarioService, FuncionarioService>();
             #endregion
             return services;
         }

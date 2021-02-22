@@ -17,7 +17,7 @@ namespace GestaoEmpresa.Dominio
         }
 
         public int IdEmpresa { get; set; }
-        public Pis Pis { get; set; }
+        public Pis Pis { get; private set; }
         public string Matricula { get; private set; }
         public string Funcao { get; private set; }
         public string Nome { get; private set; }
@@ -25,6 +25,21 @@ namespace GestaoEmpresa.Dominio
         public List<JornadaTrabalho> Jornadas { get; set; } = new List<JornadaTrabalho>();
         public Endereco Endereco { get; set; }
 
+        public void AtualizarFuncionario(string matricula, string funcao, string nome)
+        {  
+            Matricula = matricula;
+            Funcao = funcao;
+            Nome = nome;
+        }
+        public void AtualizarEmpresa(int empresaId) { IdEmpresa = empresaId; }
+        public void AtualizarPis(string pis)
+        {
+            Pis = new Pis(pis);
+        }
+        public void AtualizarCpf(string cpf)
+        {
+            Cpf = new Cpf(cpf);
+        }
         public void AtribuirEndereco(Endereco endereco)
         {
             Endereco = endereco;

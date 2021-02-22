@@ -4,6 +4,8 @@
 <div>
     <h4>Funcionario</h4>
     <hr />
+
+    <vc:Summary></vc:Summary>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Id)
@@ -56,9 +58,3 @@
         <a asp-action="Index">Voltar</a>
     </form>
 </div>
-@section Scripts {
-    @{
-        //Adiciona mensagens de alerta
-        await Html.RenderPartialAsync("_Alerta");
-    }
-}

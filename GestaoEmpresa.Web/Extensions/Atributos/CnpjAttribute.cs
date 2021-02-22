@@ -41,9 +41,9 @@ namespace GestaoEmpresa.Web.Extensions.Atributos
             private readonly IValidationAttributeAdapterProvider _baseProvider = new ValidationAttributeAdapterProvider();
             public IAttributeAdapter GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer stringLocalizer)
             {
-                if (attribute is CnpjAttribute cpfAttribute)
+                if (attribute is CnpjAttribute cnpjAttribute)
                 {
-                    return new CnpjAttributeAdapter(cpfAttribute, stringLocalizer);
+                    return new CnpjAttributeAdapter(cnpjAttribute, stringLocalizer);
                 }
                 return _baseProvider.GetAttributeAdapter(attribute, stringLocalizer);
             }
