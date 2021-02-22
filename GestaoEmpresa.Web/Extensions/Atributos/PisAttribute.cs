@@ -11,7 +11,7 @@ namespace GestaoEmpresa.Web.Extensions.Atributos
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return Pis.Validar(value.ToString()) ? ValidationResult.Success : new ValidationResult("PIS em formato inválido");
+            return value == null || Pis.Validar(value.ToString()) ? ValidationResult.Success : new ValidationResult("PIS em formato inválido");
         }
     }
 

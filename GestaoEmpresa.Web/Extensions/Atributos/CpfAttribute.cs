@@ -11,7 +11,7 @@ namespace GestaoEmpresa.Web.Extensions.Atributos
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return Cpf.Validar(value.ToString()) ? ValidationResult.Success : new ValidationResult("CPF em formato inválido");
+            return  value == null || Cpf.Validar(value.ToString()) ? ValidationResult.Success : new ValidationResult("CPF em formato inválido");
         }
 
     }

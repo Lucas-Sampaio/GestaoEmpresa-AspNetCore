@@ -9,10 +9,10 @@ namespace GestaoEmpresa.Web.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Nome")]
-        public string Nome { get; private set; }
+        public string Nome { get; set; }
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("CNPJ")]
         [Cnpj]
-        public string Cnpj { get; private set; }
+        public string Cnpj { get; set; }
     }
 }

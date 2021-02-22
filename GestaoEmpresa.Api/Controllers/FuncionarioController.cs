@@ -5,6 +5,7 @@ using GestaoEmpresa.Extensions.ConexaoApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GestaoEmpresa.Api.Controllers
@@ -25,12 +26,13 @@ namespace GestaoEmpresa.Api.Controllers
         /// </summary>
         /// <returns>Lista de funcionarios</returns>
         ///<response code="200">Retorna  uma lista de funcionarios</response>
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Funcionario>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FuncionarioDTO>))]
         [HttpGet("")]
         public async Task<IActionResult> Get()
         {
             var funcionarios = await _funcionarioRepository.ObterTodos();
-            return CustomResponse(funcionarios);
+            var dtos = funcionarios.Select(x => new FuncionarioDTO {Cpf = x.Cpf.Numero,Funcao = x.Funcao,Id = x.Id,Nome =x.Nome,Matricula = x.Matricula,Pis= x.Pis.Numero });
+            return CustomResponse(dtos);
         }
         // GET: api/funcionario/5
         /// <summary>
@@ -38,12 +40,22 @@ namespace GestaoEmpresa.Api.Controllers
         /// </summary>
         /// <returns>funcionario</returns>
         ///<response code="200">Retorna  um funcionario</response>
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Funcionario))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FuncionarioDTO))]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var funcionario = await _funcionarioRepository.ObterPorId(id);
-            return CustomResponse(funcionario);
+            var dto = new FuncionarioDTO
+            {
+                Cpf = funcionario.Cpf.Numero,
+                Funcao = funcionario.Funcao,
+                Id = funcionario.Id,
+                Nome = funcionario.Nome,
+                Matricula = funcionario.Matricula,
+                Pis = funcionario.Pis.Numero,
+                IdEmpresa = funcionario.IdEmpresa
+            }; 
+            return CustomResponse(dto);
         }
         // POST: api/funcionario
         /// <summary>
@@ -81,8 +93,11 @@ namespace GestaoEmpresa.Api.Controllers
 
             var funcionario = await _funcionarioRepository.ObterPorId(id);
 
-            if (id != funcionarioDto.Id || funcionario == null) AdicionarErroProcessamento("funcionario não encontrado");
-
+            if (id != funcionarioDto.Id || funcionario == null)
+            {
+                AdicionarErroProcessamento("funcionario não encontrado");
+                return CustomResponse();
+            }
             funcionario.AtualizarFuncionario(funcionarioDto.Matricula, funcionarioDto.Funcao, funcionarioDto.Nome);
             _funcionarioRepository.Atualizar(funcionario);
             var success = await _funcionarioRepository.UnitOfWork.Commit();
@@ -102,8 +117,11 @@ namespace GestaoEmpresa.Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var funcionario = await _funcionarioRepository.ObterPorId(id);
-            if (funcionario == null) AdicionarErroProcessamento("funcionario não encontrada");
-
+            if (funcionario == null)
+            {
+                AdicionarErroProcessamento("funcionario não encontrada");
+                return CustomResponse();
+            }
             _funcionarioRepository.Remover(id);
             var success = await _funcionarioRepository.UnitOfWork.Commit();
             return CustomResponse(success);

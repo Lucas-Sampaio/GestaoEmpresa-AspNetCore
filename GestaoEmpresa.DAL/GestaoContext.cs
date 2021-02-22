@@ -32,14 +32,9 @@ namespace GestaoEmpresa.DAL
             {
                 property.SetColumnType("varchar(100)");
             }
-            //impede a delete em cascata
-            var relacoes = modelBuilder.Model.GetEntityTypes().SelectMany(x => x.GetForeignKeys());
-            foreach (var item in relacoes)
-            {
-                item.DeleteBehavior = DeleteBehavior.ClientSetNull;
-            }
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GestaoContext).Assembly);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

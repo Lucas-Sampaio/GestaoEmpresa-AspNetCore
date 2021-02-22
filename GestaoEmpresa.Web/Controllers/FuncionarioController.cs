@@ -45,9 +45,9 @@ namespace GestaoEmpresa.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(FuncionarioVM funcionarioVM)
         {
-            if (!ModelState.IsValid) { return View(funcionarioVM); }
-
             ViewBag.Empresas = await GetEmpresas();
+
+            if (!ModelState.IsValid) { return View(funcionarioVM); }
 
             var resposta = await _funcionarioService.CadastrarFuncionario(funcionarioVM);
             if (ResponsePossuiErros(resposta)) return View(funcionarioVM);
@@ -58,13 +58,13 @@ namespace GestaoEmpresa.Web.Controllers
         // GET: Funcionario/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
+            ViewBag.Empresas = await GetEmpresas();
 
             if (id == null)
             {
                 return NotFound();
             }
 
-            ViewBag.Empresas = await GetEmpresas();
             var model = await _funcionarioService.ObterPorId(id.Value);
             if (model == null)
             {
@@ -79,15 +79,13 @@ namespace GestaoEmpresa.Web.Controllers
         public async Task<ActionResult> Edit(int id, FuncionarioVM funcionarioVM)
         {
 
+            ViewBag.Empresas = await GetEmpresas();
+
             if (id != funcionarioVM.Id)
             {
                 return NotFound();
             }
             if (!ModelState.IsValid) { return View(funcionarioVM); }
-
-
-
-            ViewBag.Empresas = await GetEmpresas();
 
             var resposta = await _funcionarioService.AtualizarFuncionario(id, funcionarioVM);
             if (ResponsePossuiErros(resposta)) return View(funcionarioVM);

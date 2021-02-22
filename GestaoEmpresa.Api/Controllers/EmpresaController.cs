@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GestaoEmpresa.Api.Controllers
@@ -29,12 +30,13 @@ namespace GestaoEmpresa.Api.Controllers
         /// </summary>
         /// <returns>Lista de empresas</returns>
         ///<response code="200">Retorna uma lista de empresas</response>
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Empresa>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmpresaDTO>))]
         [HttpGet("")]
         public async Task<IActionResult> Get()
         {
             var empresas = await _empresaRepository.ObterTodos();
-            return CustomResponse(empresas);
+            var empresasDtos = empresas.Select(x => new EmpresaDTO(x.Nome,x.Cnpj.Numero,x.Id));
+            return CustomResponse(empresasDtos);
         }
 
         // GET: api/Empresa/5
@@ -43,12 +45,14 @@ namespace GestaoEmpresa.Api.Controllers
         /// </summary>
         /// <returns>empresa</returns>
         ///<response code="200">Retorna uma empresa</response>
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Empresa))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmpresaDTO))]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var empresa = await _empresaRepository.ObterPorId(id);
-            return CustomResponse(empresa);
+            if (empresa == null) return NotFound("Empresa não encontrada");
+            var empresaDto = new EmpresaDTO(empresa.Nome, empresa.Cnpj.Numero,empresa.Id);
+            return CustomResponse(empresaDto);
         }
 
         // POST: api/Empresa
@@ -88,7 +92,11 @@ namespace GestaoEmpresa.Api.Controllers
             if (id != empresaDto.Id) AdicionarErroProcessamento("Empresa não corresponde a informada");
 
             var empresa = await _empresaRepository.ObterPorId(id);
-            if (empresa == null) AdicionarErroProcessamento("Empresa não encontrada");
+            if (empresa == null)
+            {
+                AdicionarErroProcessamento("Empresa não encontrada");
+                return CustomResponse();
+            }
 
             empresa.AtualizarNome(empresaDto.Nome);
             empresa.AtualizarCnpj(empresaDto.Cnpj);
@@ -111,8 +119,11 @@ namespace GestaoEmpresa.Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var empresa = await _empresaRepository.ObterPorId(id);
-            if (empresa == null) AdicionarErroProcessamento("Empresa não encontrada");
-
+            if (empresa == null)
+            {
+                AdicionarErroProcessamento("Empresa não encontrada");
+                return CustomResponse();
+            }
             _empresaRepository.Remover(id);
             var success = await _empresaRepository.UnitOfWork.Commit();
 

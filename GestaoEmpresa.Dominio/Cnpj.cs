@@ -6,12 +6,13 @@
         public string Numero { get; private set; }
         public Cnpj(string numero)
         {
-            if (!Validar(numero.ApenasNumeros())) throw new DomainException("Cnpj inválido");
+            if (!Validar(numero)) throw new DomainException("Cnpj inválido");
             Numero = numero.ApenasNumeros();
         }
 
         public static bool Validar(string cnpj)
         {
+            cnpj = cnpj.ApenasNumeros();
             int[] multiplicador1 = new int[12] { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] multiplicador2 = new int[13] { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
             int soma;

@@ -11,7 +11,7 @@ namespace GestaoEmpresa.Web.Extensions.Atributos
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return Cnpj.Validar(value.ToString()) ? ValidationResult.Success : new ValidationResult("CNPJ em formato inválido");
+            return value == null || Cnpj.Validar(value.ToString()) ? ValidationResult.Success : new ValidationResult("CNPJ em formato inválido");
         }
 
         //classe para usar a validacao no frontend
