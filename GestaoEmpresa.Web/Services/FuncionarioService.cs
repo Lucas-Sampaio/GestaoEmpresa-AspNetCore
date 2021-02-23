@@ -16,6 +16,15 @@ namespace GestaoEmpresa.Web.Services
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(settings.Value.ApiGestaoUrl);
         }
+
+        public async Task<ResponseResult> AdicionarJornada(JornadaTrabalhoVMVAL jornada)
+        {
+            var content = ObterConteudo(jornada);
+            var response = await _httpClient.PostAsync("api/funcionario/adicionarJornada", content);
+            if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+            return new ResponseResult();
+        }
+
         public async Task<ResponseResult> AtualizarFuncionario(int id, FuncionarioVM FuncionarioVM)
         {
 
@@ -50,6 +59,13 @@ namespace GestaoEmpresa.Web.Services
         public async Task<ResponseResult> RemoverFuncionario(int id)
         {
             var response = await _httpClient.DeleteAsync($"api/funcionario/{id}");
+            if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+            return new ResponseResult();
+        }
+
+        public async Task<ResponseResult> RemoverJornada(int id,int jornadaId)
+        {
+            var response = await _httpClient.DeleteAsync($"api/funcionario/{id}/removerJornada/{jornadaId}");
             if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
             return new ResponseResult();
         }

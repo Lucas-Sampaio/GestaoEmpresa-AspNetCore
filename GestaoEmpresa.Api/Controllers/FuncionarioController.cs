@@ -1,7 +1,6 @@
 ﻿using GestaoEmpresa.Api.Models;
 using GestaoEmpresa.Dominio;
 using GestaoEmpresa.Dominio.Repositorio;
-using GestaoEmpresa.Extensions.ConexaoApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -31,7 +30,7 @@ namespace GestaoEmpresa.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var funcionarios = await _funcionarioRepository.ObterTodos();
-            var dtos = funcionarios.Select(x => new FuncionarioDTO {Cpf = x.Cpf.Numero,Funcao = x.Funcao,Id = x.Id,Nome =x.Nome,Matricula = x.Matricula,Pis= x.Pis.Numero });
+            var dtos = funcionarios.Select(x => new FuncionarioDTO { Cpf = x.Cpf.Numero, Funcao = x.Funcao, Id = x.Id, Nome = x.Nome, Matricula = x.Matricula, Pis = x.Pis.Numero });
             return CustomResponse(dtos);
         }
         // GET: api/funcionario/5
@@ -44,7 +43,8 @@ namespace GestaoEmpresa.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var funcionario = await _funcionarioRepository.ObterPorId(id);
+            var funcionario = await _funcionarioRepository.ObterPorId(id,"Jornadas");
+            if (funcionario == null) return NotFound("funcionario não encontrado");
             var dto = new FuncionarioDTO
             {
                 Cpf = funcionario.Cpf.Numero,
@@ -53,8 +53,9 @@ namespace GestaoEmpresa.Api.Controllers
                 Nome = funcionario.Nome,
                 Matricula = funcionario.Matricula,
                 Pis = funcionario.Pis.Numero,
-                IdEmpresa = funcionario.IdEmpresa
-            }; 
+                IdEmpresa = funcionario.IdEmpresa,
+                Jornadas = funcionario.Jornadas.Select(x => new JornadaTrabalhoResult(x.Id,x.IdFuncionario,x.ObterPeriodoDia(),x.ObterPeriodoHora()))
+            };
             return CustomResponse(dto);
         }
         // POST: api/funcionario
@@ -112,7 +113,7 @@ namespace GestaoEmpresa.Api.Controllers
         /// <param name="id">O id do objeto</param>
         /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
         /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -127,57 +128,54 @@ namespace GestaoEmpresa.Api.Controllers
             return CustomResponse(success);
         }
 
+        // POST: api/funcionario/adicionarJornada
+        /// <summary>
+        /// Cria um objeto jornada de trabalho
+        /// </summary>
+        /// <param name="jornadaTrabalho">um objeto jornadaTrabalho</param>
+        /// <returns>retorna true se o objeto foi criado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna u true se o objeto foi criado com exito e false caso ocorra algum erro</response>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [HttpPost("adicionarJornada")]
+        public async Task<IActionResult> AdicionarJornada([FromBody] JornadaTrabalhoDTO jornadaTrabalho)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
+            var jd = jornadaTrabalho;
+            var jornada = new JornadaTrabalho(jd.IdFuncionario, jd.DiaInicio, jd.DiaFim, jd.HoraInicio, jd.HoraFim);
+            _funcionarioRepository.AdicionarJornada(jornada);
+            var success = await _funcionarioRepository.UnitOfWork.Commit();
+            return CustomResponse(success);
+        }
 
-        //// POST: api/jornada
-        ///// <summary>
-        ///// Cria um objeto jornada de trabalho
-        ///// </summary>
-        ///// <param name="jornadaVMVal">um objeto jornada viewModelVAL</param>
-        ///// <returns>retorna true se o objeto foi criado com exito e false caso ocorra algum erro</returns>
-        ///// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
-        //[HttpPost("adicionarJornada")]
-        //public async Task<IActionResult> AdicionarJornada([FromBody] JornadaVMVal jornadaVMVal)
-        //{
-        //    var result = ResponseApi<bool>.Instance;
-        //    try
-        //    {
-        //        var jornada = AutoMapperManager.Instance.Map<JornadaTrabalho>(jornadaVMVal);
-        //        _funcionarioRepository.AdicionarJornada(jornada);
-        //        await _funcionarioRepository.UnitOfWork.Commit();
-        //        result.SetResult(true);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(result.AddError(ex.Message).SetResult(false));
-        //    }
-        //}
+        // DELETE: api/funcionario/1/removerJornada/5
+        /// <summary>
+        /// Deleta o objeto jornada de trabalho
+        /// </summary>
+        /// <param name="id">O id do funcionario</param>
+        /// <param name="jornadaId">O id da jornada</param>
+        /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
+        /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
 
-        //// DELETE: api/jornada/5
-        ///// <summary>
-        ///// Deleta o objeto jornada de trabalho
-        ///// </summary>
-        ///// <param name="id">O id do objeto</param>
-        ///// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
-        ///// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
-        //[HttpDelete("removerJornada/{id}")]
-        //public async Task<IActionResult> RemoverJornada(int id)
-        //{
-        //    var result = ResponseApi<bool>.Instance;
-        //    try
-        //    {
-        //        _funcionarioRepository.RemoverJornada(id);
-        //        await _funcionarioRepository.UnitOfWork.Commit();
-        //        result.SetResult(true);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(result.AddError(ex.Message).SetResult(false));
-        //    }
-        //}
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [HttpDelete("{id}/removerJornada/{jornadaId}")]
+        public async Task<IActionResult> RemoverJornada(int id, int jornadaId)
+        {
+            var funcionario = await _funcionarioRepository.ObterPorId(id, "Jornadas");
+            if (funcionario == null)
+            {
+                AdicionarErroProcessamento("funcionario não encontrada");
+                return CustomResponse();
+            }
+            if (funcionario.Jornadas.Any(x => x.Id == jornadaId))
+            {
+                AdicionarErroProcessamento("jornada não encontrada");
+                return CustomResponse();
+            }
+            _funcionarioRepository.RemoverJornada(id);
+            var success = await _funcionarioRepository.UnitOfWork.Commit();
+            return CustomResponse(success);
+
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace GestaoEmpresa.Web.Services
         Task<ResponseResult> CadastrarFuncionario(FuncionarioVM FuncionarioVM);
         Task<ResponseResult> AtualizarFuncionario(int id, FuncionarioVM FuncionarioVM);
         Task<ResponseResult> RemoverFuncionario(int id);
+        Task<ResponseResult> AdicionarJornada(JornadaTrabalhoVMVAL jornada);
+        Task<ResponseResult> RemoverJornada(int id, int jornadaId);
 
     }
 }

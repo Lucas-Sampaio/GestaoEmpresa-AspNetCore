@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestaoEmpresa.Api.Models
 {
@@ -19,6 +20,6 @@ namespace GestaoEmpresa.Api.Models
         public string Nome { get;  set; }
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string Cpf { get;  set; }
-
+        public IEnumerable<JornadaTrabalhoResult> Jornadas { get; set; }
     }
 }
