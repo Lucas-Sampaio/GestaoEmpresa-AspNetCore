@@ -1,4 +1,5 @@
 ﻿using GestaoEmpresa.Web.Extensions.Atributos;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,5 +30,6 @@ namespace GestaoEmpresa.Web.Models
         [DisplayName("CPF")]
         [Cpf]
         public string Cpf { get; set; }
+        public IEnumerable<JornadaTrabalhoVM> Jornadas { get; set; }
     }
 }

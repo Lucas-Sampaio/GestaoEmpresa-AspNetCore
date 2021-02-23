@@ -1,12 +1,8 @@
 ﻿using GestaoEmpresa.Api.Models;
 using GestaoEmpresa.Dominio;
 using GestaoEmpresa.Dominio.Repositorio;
-using GestaoEmpresa.DominioViewModel.EmpresaViewModel;
-using GestaoEmpresa.Extensions.AutoMapper;
-using GestaoEmpresa.Extensions.ConexaoApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +31,7 @@ namespace GestaoEmpresa.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var empresas = await _empresaRepository.ObterTodos();
-            var empresasDtos = empresas.Select(x => new EmpresaDTO(x.Nome,x.Cnpj.Numero,x.Id));
+            var empresasDtos = empresas.Select(x => new EmpresaDTO(x.Nome, x.Cnpj.Numero, x.Id));
             return CustomResponse(empresasDtos);
         }
 
@@ -51,7 +47,7 @@ namespace GestaoEmpresa.Api.Controllers
         {
             var empresa = await _empresaRepository.ObterPorId(id);
             if (empresa == null) return NotFound("Empresa não encontrada");
-            var empresaDto = new EmpresaDTO(empresa.Nome, empresa.Cnpj.Numero,empresa.Id);
+            var empresaDto = new EmpresaDTO(empresa.Nome, empresa.Cnpj.Numero, empresa.Id);
             return CustomResponse(empresaDto);
         }
 
@@ -114,7 +110,7 @@ namespace GestaoEmpresa.Api.Controllers
         /// <param name="id">O id do objeto</param>
         /// <returns>retorna true se o objeto foi atualizado com exito e false caso ocorra algum erro</returns>
         /// <response code="200">retorna uma responseApi com o result true se o objeto foi criado com exito e false caso ocorra algum erro</response>
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseApi<bool>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
